@@ -1,9 +1,9 @@
 --
 -- Calendar module for Awesome 3.5 WM
--- 
+--
 -- Based on: http://awesome.naquadah.org/wiki/Calendar_widget
 -- Modified by: Maxim Andreev <andreevmaxim@gmail.com>
--- GitHub: https://github.com/cdump/awesome-calendar 
+-- GitHub: https://github.com/cdump/awesome-calendar
 --
 -- Add to rc.lua:
 -- local calendar = require("calendar35")
@@ -35,12 +35,13 @@ function displayMonth(month,year,weekStart)
     for x=0,6 do
         lines = lines .. os.date(" <b>%a</b> ",os.time{year=2006,month=1,day=x+wkSt})
     end
+    local dlen = #os.date("%a", os.time{year=2006,month=1,day=1})
 
     lines = lines .. "\n"
 
     local writeLine = 1
     while writeLine < (stDay + 1) do
-        lines = lines .. "    "
+        lines = lines .. string.rep(" ", dlen + 2)
         writeLine = writeLine + 1
     end
 
@@ -54,8 +55,9 @@ function displayMonth(month,year,weekStart)
         if os.date("%Y-%m-%d") == os.date("%Y-%m-%d", t) then
             x = string.format(current_day_format, d)
         end
-        if (#(tostring(d)) == 1) then
-            x = " " .. x
+        local z = #(tostring(d))
+        if z < dlen then
+            x = string.rep(" ", dlen - z) .. x
         end
         lines = lines .. "  " .. x
         writeLine = writeLine + 1
