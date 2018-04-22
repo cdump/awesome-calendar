@@ -1,12 +1,12 @@
 --
--- Calendar module for Awesome 3.5 WM
+-- Calendar module for Awesome WM
 --
 -- Based on: http://awesome.naquadah.org/wiki/Calendar_widget
 -- Modified by: Maxim Andreev <andreevmaxim@gmail.com>
 -- GitHub: https://github.com/cdump/awesome-calendar
 --
 -- Add to rc.lua:
--- local calendar = require("calendar35")
+-- local calendar = require("calendar")
 -- ..
 -- calendar.addCalendarToWidget(widget_datetime)
 --
@@ -18,10 +18,11 @@ local capi = {
     mouse = mouse,
     screen = screen
 }
+local utf8 = require("utf8")
 local awful = require("awful")
 local naughty = require("naughty")
-module("calendar35")
 
+module("calendar")
 local calendar = {}
 local current_day_format = '<span color="#ee7777"><b>%s</b></span>'
 
@@ -30,18 +31,18 @@ function displayMonth(month,year,weekStart)
     local d=os.date("*t",t)
     local mthDays,stDay=d.day,(d.wday-d.day-wkSt+1)%7
 
-    local lines = " "
+    local lines = ""
 
     for x=0,6 do
         lines = lines .. os.date(" <b>%a</b> ",os.time{year=2006,month=1,day=x+wkSt})
     end
-    local dlen = #os.date("%a", os.time{year=2006,month=1,day=1})
+    local dlen = utf8.len(os.date("%a", os.time{year=2006,month=1,day=1}))
 
     lines = lines .. "\n"
 
     local writeLine = 1
     while writeLine < (stDay + 1) do
-        lines = lines .. string.rep(" ", dlen + 2)
+        lines = lines .. string.rep(" ", dlen+2)
         writeLine = writeLine + 1
     end
 
@@ -59,7 +60,7 @@ function displayMonth(month,year,weekStart)
         if z < dlen then
             x = string.rep(" ", dlen - z) .. x
         end
-        lines = lines .. "  " .. x
+        lines = lines .. " " .. x .. " "
         writeLine = writeLine + 1
     end
     local header = "<b><i>" .. os.date("%B, %Y", os.time{year=year,month=month,day=1}) .. "</i></b>\n"
@@ -135,4 +136,3 @@ awful.button({ 'Shift' }, 5, function()
 end)
 ))
 end
-

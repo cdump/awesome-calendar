@@ -1,7 +1,7 @@
 # awesome-calendar
 
 ## About
-Simple Awesome 3.5 calendar widget, based on [http://awesome.naquadah.org/wiki/Calendar_widget](http://awesome.naquadah.org/wiki/Calendar_widget)
+Simple Awesome 3.5 / 4 calendar widget, based on [http://awesome.naquadah.org/wiki/Calendar_widget](http://awesome.naquadah.org/wiki/Calendar_widget)
 
 ![Screenshot](https://github.com/cdump/awesome-calendar/raw/screenshots/awesome-calendar.png)
 
