@@ -22,11 +22,10 @@ local utf8 = require("utf8")
 local awful = require("awful")
 local naughty = require("naughty")
 
-module("calendar")
 local calendar = {}
 local current_day_format = '<span color="#ee7777"><b>%s</b></span>'
 
-function displayMonth(month,year,weekStart)
+local function displayMonth(month,year,weekStart)
     local t,wkSt=os.time{year=year, month=month+1, day=0},weekStart or 1
     local d=os.date("*t",t)
     local mthDays,stDay=d.day,(d.wday-d.day-wkSt+1)%7
@@ -68,7 +67,7 @@ function displayMonth(month,year,weekStart)
     return header .. "\n" .. lines
 end
 
-function switchNaughtyMonth(switchMonths)
+local function switchNaughtyMonth(switchMonths)
     if (#calendar < 3) then return end
     local swMonths = switchMonths or 1
     calendar[1] = calendar[1] + swMonths
@@ -84,7 +83,7 @@ function switchNaughtyMonth(switchMonths)
     calendar = calendar_new
 end
 
-function switchNaughtyGoToToday()
+local function switchNaughtyGoToToday()
     if (#calendar < 3) then return end
     local swMonths = switchMonths or 1
     calendar[1] = os.date("*t").month
@@ -92,7 +91,7 @@ function switchNaughtyGoToToday()
     switchNaughtyMonth(0)
 end
 
-function addCalendarToWidget(mywidget, custom_current_day_format)
+local function addToWidget(mywidget, custom_current_day_format)
     if custom_current_day_format then current_day_format = custom_current_day_format end
 
     mywidget:connect_signal('mouse::enter', function ()
@@ -105,34 +104,24 @@ function addCalendarToWidget(mywidget, custom_current_day_format)
             screen = capi.mouse.screen
         })
     }
-end)
-mywidget:connect_signal('mouse::leave', function () naughty.destroy(calendar[3]) end)
+    end)
+    mywidget:connect_signal('mouse::leave', function () naughty.destroy(calendar[3]) end)
 
-mywidget:buttons(awful.util.table.join(
-awful.button({ }, 1, function()
-    switchNaughtyMonth(-1)
-end),
-awful.button({ }, 2, switchNaughtyGoToToday),
-awful.button({ }, 3, function()
-    switchNaughtyMonth(1)
-end),
-awful.button({ }, 4, function()
-    switchNaughtyMonth(-1)
-end),
-awful.button({ }, 5, function()
-    switchNaughtyMonth(1)
-end),
-awful.button({ 'Shift' }, 1, function()
-    switchNaughtyMonth(-12)
-end),
-awful.button({ 'Shift' }, 3, function()
-    switchNaughtyMonth(12)
-end),
-awful.button({ 'Shift' }, 4, function()
-    switchNaughtyMonth(-12)
-end),
-awful.button({ 'Shift' }, 5, function()
-    switchNaughtyMonth(12)
-end)
+    mywidget:buttons(awful.util.table.join(
+    awful.button({ }, 1, function()
+        switchNaughtyMonth(-1)
+    end),
+    awful.button({ }, 2, switchNaughtyGoToToday),
+    awful.button({ }, 3, function() switchNaughtyMonth(1) end),
+    awful.button({ }, 4, function() switchNaughtyMonth(-1) end),
+    awful.button({ }, 5, function() switchNaughtyMonth(1) end),
+    awful.button({ 'Shift' }, 1, function() switchNaughtyMonth(-12) end),
+    awful.button({ 'Shift' }, 3, function() switchNaughtyMonth(12) end),
+    awful.button({ 'Shift' }, 4, function() switchNaughtyMonth(-12) end),
+    awful.button({ 'Shift' }, 5, function() switchNaughtyMonth(12) end)
 ))
 end
+
+return {
+    addToWidget = addToWidget,
+}
